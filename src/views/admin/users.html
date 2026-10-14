@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>User Management - Lost & Found</title><link rel="stylesheet" href="/css/main.css" /><link rel="stylesheet" href="/css/dashboard.css" /></head>
+<body>
+<header class="site-header"><a class="brand" href="/admin/dashboard"><span class="brand-mark">LF</span><span>User Management</span></a><nav><a href="/admin/dashboard">Dashboard</a><a href="/">Public Inventory</a><button class="link-button" id="logoutBtn">Logout</button></nav></header>
+<main class="container"><div class="page-heading"><div><p class="eyebrow">ADMINISTRATION</p><h1>Users</h1><p class="muted">Manage account roles and active status.</p></div></div><section class="card"><div id="usersTable" class="table-wrap"></div></section></main>
+<script src="/js/auth.js"></script><script>
+(async () => {
+  const me = await fetch('/api/auth/me'); if (!me.ok) { location.href='/login'; return; }
+  const meData = await me.json(); if (meData.user.role !== 'admin') { location.href='/admin/dashboard'; return; }
+  async function load() {
+    const res = await fetch('/api/admin/users'); const data = await res.json(); const wrap = document.getElementById('usersTable');
+    if (!res.ok) { wrap.innerHTML = `<p class="error">${data.message}</p>`; return; }
+    wrap.innerHTML = `<table><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead><tbody>${data.users.map(u => `
+      <tr><td>${esc(u.full_name)}</td><td>${esc(u.email)}</td><td><select data-role="${u.id}"><option ${u.role==='student'?'selected':''}>student</option><option ${u.role==='staff'?'selected':''}>staff</option><option ${u.role==='admin'?'selected':''}>admin</option></select></td><td><select data-status="${u.id}"><option ${u.status==='active'?'selected':''}>active</option><option ${u.status==='inactive'?'selected':''}>inactive</option></select></td><td>${new Date(u.created_at).toLocaleDateString()}</td><td><button class="btn small" data-save="${u.id}">Save</button></td></tr>`).join('')}</tbody></table>`;
+  }
+  async function save(id){ const role=document.querySelector(`[data-role="${id}"]`).value; const status=document.querySelector(`[data-status="${id}"]`).value; await fetch(`/api/admin/users/${id}/role`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({role})}); const r=await fetch(`/api/admin/users/${id}/status`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({status})}); const d=await r.json(); alert(d.message || 'Saved.'); load(); }
+  function esc(v){ return String(v).replace(/[&<>"]/g, s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[s])); }
+  document.getElementById('usersTable').addEventListener('click',e=>{const id=e.target.dataset.save;if(id)save(id);});
+  load();
+})();
+</script></body></html>

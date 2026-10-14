@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>Admin Dashboard - Lost & Found</title><link rel="stylesheet" href="/css/main.css" /><link rel="stylesheet" href="/css/dashboard.css" /></head>
+<body>
+<header class="site-header"><a class="brand" href="/"><span class="brand-mark">LF</span><span>Management Dashboard</span></a><nav><a href="/">Public Inventory</a><a href="/admin/users" id="usersLink" class="hidden">Users</a><button class="link-button" id="logoutBtn">Logout</button></nav></header>
+<main class="container">
+  <div class="page-heading"><div><p class="eyebrow">ADMINISTRATION</p><h1>Dashboard</h1><p id="staffName" class="muted"></p></div></div>
+  <section class="stats-grid">
+    <div class="stat-card"><span>Total found items</span><strong id="totalItems">0</strong></div>
+    <div class="stat-card"><span>Available</span><strong id="foundItems">0</strong></div>
+    <div class="stat-card"><span>Claimed</span><strong id="claimedItems">0</strong></div>
+    <div class="stat-card"><span>Unfound</span><strong id="unfoundItems">0</strong></div><div class="stat-card"><span>Pending claims</span><strong id="pendingClaims">0</strong></div>
+  </section>
+
+  <section class="card" style="margin-bottom:18px">
+    <div class="section-title">
+      <div><p class="eyebrow">LOST REPORTS</p><h2>Student lost-item reports</h2><p class="muted">Approve a report to post it in Manage Items. Reject a report to remove it.</p></div>
+      <button class="btn ghost" id="refreshLostReports">Refresh</button>
+    </div>
+    <div id="lostReportsTable" class="table-wrap"></div>
+  </section>
+
+  <section class="card" style="margin-bottom:18px">
+    <div class="section-title"><div><p class="eyebrow">CLAIMS</p><h2>Pending ownership claims</h2></div><button class="btn ghost" id="refreshClaims">Refresh</button></div>
+    <div id="claimsTable" class="table-wrap"></div>
+  </section>
+
+  <section class="card">
+    <div class="section-title"><div><p class="eyebrow">MANAGE ITEMS</p><h2>Approved / found items</h2><p class="muted">Items approved from lost reports appear as Unfound. Mark an Unfound item as Found when it is physically recovered.</p></div><button class="btn ghost" id="refreshItems">Refresh</button></div>
+    <div id="adminItems" class="table-wrap"></div>
+  </section>
+
+  <div id="editModal" class="modal hidden">
+    <div class="modal-card">
+      <button class="modal-close" id="closeEdit">×</button>
+      <p class="eyebrow">UPDATE INVENTORY</p><h2>Edit found item</h2>
+      <form id="editForm">
+        <input type="hidden" name="id" />
+        <label>Item name<input name="item_name" required /></label>
+        <label>Description<textarea name="description" rows="4" required></textarea></label>
+        <div class="two-col"><label>Category<select name="category" required><option>IDs & Documents</option><option>Electronics</option><option>Accessories</option><option>Personal Items</option><option>Clothing</option><option>Keys</option><option>Other</option></select></label><label>Status<select name="status" required><option value="found">Found</option><option value="claimed">Claimed</option><option value="unfound">Unfound</option></select></label></div>
+        <div class="two-col"><label>Location found<input name="location_found" required /></label><label>Date found<input name="date_found" type="date" required /></label></div>
+        <label>Replace photo (optional)<input name="image" type="file" accept="image/*" /></label>
+        <button class="btn primary full" type="submit">Save changes</button><p id="editMsg" class="form-msg"></p>
+      </form>
+    </div>
+  </div>
+</main>
+<script src="/js/auth.js"></script><script src="/js/admin.js"></script>
+</body>
+</html>

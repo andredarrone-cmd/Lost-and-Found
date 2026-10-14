@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lost & Found Management Platform</title>
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/dashboard.css" />
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="/"><span class="brand-mark">LF</span><span>Lost & Found</span></a>
+  <nav id="navGuest"><a href="/login">Login / Register</a></nav>
+  <nav id="navUser" class="hidden"><span id="welcomeName"></span><a href="/report-lost">Report Lost</a><button class="link-button" id="logoutBtn">Logout</button></nav>
+</header>
+
+<main class="container">
+  <section class="hero">
+    <div><p class="eyebrow">CENTRALIZED ITEM INVENTORY</p><h1>Find what you lost.<br><span>Report what you found.</span></h1><p class="hero-copy">Search found items, report missing belongings, and send ownership claims through one centralized platform.</p></div>
+    <div class="hero-actions"><a class="btn primary" href="/report-lost">Report a Lost Item</a><a class="btn ghost" id="heroSignIn" href="/login">Sign in</a></div>
+  </section>
+
+  <section class="card search-card">
+    <div class="section-title"><div><p class="eyebrow">PUBLIC SEARCH</p><h2>Found inventory</h2></div><span id="resultCount" class="pill">0 items</span></div>
+    <div class="search-grid">
+      <input id="keyword" type="search" placeholder="Search item, description, or location..." />
+      <select id="category"><option value="">All categories</option></select>
+      <select id="status"><option value="all" selected>All statuses</option><option value="found">Found</option><option value="claimed">Claimed</option><option value="unfound">Unfound</option></select>
+      <button class="btn primary" id="searchBtn">Search</button>
+    </div>
+  </section>
+
+  <section id="itemsGrid" class="item-grid"></section>
+
+  <section class="card account-panel hidden" id="accountPanel">
+    <div class="section-title"><div><p class="eyebrow">MY ACCOUNT</p><h2>My activity</h2></div></div>
+    <div class="two-col">
+      <div><h3>My lost reports</h3><div id="lostReports"></div></div>
+      <div><h3>Notifications</h3><div id="notifications"></div></div>
+    </div>
+  </section>
+</main>
+
+<div id="foundReportModal" class="modal hidden">
+  <div class="modal-card">
+    <button class="modal-close" id="closeFoundReport">×</button>
+    <p class="eyebrow">FOUND ITEM REPORT</p><h2 id="foundReportTitle">Report item as found</h2>
+    <p class="muted">Tell us where and when you found this lost item. Once submitted, the item will become available in the Found inventory.</p>
+    <label>Location found<input id="reportFoundLocation" placeholder="e.g. Main Library" required /></label>
+    <label>Date found<input id="reportFoundDate" type="date" required /></label>
+    <button class="btn primary full" id="submitFoundReport">Report as Found</button>
+    <p id="foundReportMsg" class="form-msg"></p>
+  </div>
+</div>
+
+<div id="claimModal" class="modal hidden">
+  <div class="modal-card">
+    <button class="modal-close" id="closeClaim">×</button>
+    <p class="eyebrow">OWNERSHIP CLAIM</p><h2 id="claimTitle">Claim item</h2>
+    <p class="muted">Describe proof that can help staff verify the item belongs to you. Do not enter sensitive passwords or account numbers.</p>
+    <textarea id="claimMessage" rows="6" placeholder="Example: The wallet has my initials and a photo of my ID is available for verification."></textarea>
+    <label class="claim-proof-label">Proof image
+      <input id="claimProofImage" type="file" accept="image/jpeg,image/png,image/webp" required />
+      <small>Upload a clear photo that helps staff verify ownership. JPG, PNG, or WEBP, max 5 MB.</small>
+    </label>
+    <div id="claimProofPreview" class="claim-proof-preview hidden"></div>
+    <button class="btn primary full" id="submitClaim">Submit claim</button>
+    <p id="claimMsg" class="form-msg"></p>
+  </div>
+</div>
+
+<script src="/js/auth.js"></script>
+<script src="/js/inventory.js"></script>
+</body>
+</html>

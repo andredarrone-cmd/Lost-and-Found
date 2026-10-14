@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Report Lost Item - Lost & Found</title>
+  <link rel="stylesheet" href="/css/main.css" /><link rel="stylesheet" href="/css/dashboard.css" />
+</head>
+<body>
+<header class="site-header"><a class="brand" href="/"><span class="brand-mark">LF</span><span>Lost & Found</span></a><nav><a href="/">Inventory</a><button class="link-button" id="logoutBtn">Logout</button></nav></header>
+<main class="container narrow">
+  <section class="card form-card">
+    <p class="eyebrow">LOST ITEM REPORTING</p><h1>Report a lost item</h1><p class="muted">Give staff enough information to identify your item and contact you.</p>
+    <form id="lostForm">
+      <div class="two-col">
+        <label>Item name<input name="item_name" required placeholder="Item Name" /></label>
+        <label>Category<select name="category" required><option value="">Select category</option><option>IDs & Documents</option><option>Electronics</option><option>Accessories</option><option>Personal Items</option><option>Clothing</option><option>Keys</option><option>Other</option></select></label>
+      </div>
+      <label>Description<textarea name="description" rows="5" required placeholder="Color, brand, markings, contents, or other identifying details"></textarea></label>
+      <label>Photo of lost item <span class="optional-label">(optional)</span>
+        <input id="lostImage" name="image" type="file" accept="image/jpeg,image/png,image/webp" />
+        <small class="field-help">Upload a clear photo of the item. JPG, PNG, or WEBP only, up to 5 MB.</small>
+      </label>
+      <div id="lostImagePreview" class="upload-preview hidden">
+        <img id="lostImagePreviewImg" src="" alt="Preview of lost item" />
+        <div><strong>Photo preview</strong><button type="button" class="btn small" id="removeLostImage">Remove</button></div>
+      </div>
+      <div class="two-col"><label>Last seen location<input name="last_seen_location" required placeholder="e.g. Room 304" /></label><label>Date lost<input name="date_lost" type="date" required /></label></div>
+      <label>Contact information<input name="contact_info" required placeholder="Email or mobile number" /></label>
+      <button class="btn primary" type="submit">Submit lost report</button><p id="lostMsg" class="form-msg"></p>
+    </form>
+  </section>
+</main>
+<script src="/js/auth.js"></script>
+<script>
+(async () => {
+  const r = await fetch('/api/auth/me');
+  if (!r.ok) { location.href = '/login'; return; }
+  const form = document.getElementById('lostForm');
+  const imageInput = document.getElementById('lostImage');
+  const preview = document.getElementById('lostImagePreview');
+  const previewImg = document.getElementById('lostImagePreviewImg');
+  const removeImage = document.getElementById('removeLostImage');
+
+  imageInput.addEventListener('change', () => {
+    const file = imageInput.files[0];
+    if (!file) {
+      preview.classList.add('hidden');
+      previewImg.removeAttribute('src');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      imageInput.value = '';
+      preview.classList.add('hidden');
+      document.getElementById('lostMsg').textContent = 'Image must be 5 MB or smaller.';
+      document.getElementById('lostMsg').className = 'form-msg error';
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = e => {
+      previewImg.src = e.target.result;
+      preview.classList.remove('hidden');
+    };
+    reader.readAsDataURL(file);
+  });
+
+  removeImage.addEventListener('click', () => {
+    imageInput.value = '';
+    preview.classList.add('hidden');
+    previewImg.removeAttribute('src');
+  });
+
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    const msg = document.getElementById('lostMsg');
+    msg.textContent = 'Submitting...';
+    msg.className = 'form-msg';
+    try {
+      const res = await fetch('/api/items/lost-reports', { method: 'POST', body: new FormData(form) });
+      const out = await res.json();
+      msg.textContent = out.message || (res.ok ? 'Submitted.' : 'Could not submit report.');
+      msg.className = 'form-msg ' + (res.ok ? 'success' : 'error');
+      if (res.ok) {
+        form.reset();
+        preview.classList.add('hidden');
+        previewImg.removeAttribute('src');
+      }
+    } catch (err) {
+      msg.textContent = 'Could not connect to the server.';
+      msg.className = 'form-msg error';
+    }
+  });
+})();
+</script>
+</body>
+</html>

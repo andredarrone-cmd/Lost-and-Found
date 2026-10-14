@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login - Lost & Found</title>
+  <link rel="stylesheet" href="/css/main.css" />
+</head>
+<body class="auth-page">
+  <main class="auth-shell">
+    <section class="auth-card">
+      <div class="brand-block"><span class="brand-mark">LF</span><div><h1>Lost & Found</h1><p>Account access</p></div></div>
+      <div class="tabs"><button class="tab active" data-tab="login">Login</button><button class="tab" data-tab="register">Register</button></div>
+
+      <form id="loginForm" class="form-panel active">
+        <label>Email<input type="email" name="email" required /></label>
+        <label>Password<input type="password" name="password" required /></label>
+        <button class="btn primary full" type="submit">Login</button>
+        <p id="loginMsg" class="form-msg"></p>
+      </form>
+
+      <form id="registerForm" class="form-panel">
+        <label>Full name<input type="text" name="full_name" required /></label>
+        <label>Email<input type="email" name="email" required /></label>
+        <label>Password<input type="password" name="password" minlength="8" required /></label>
+        <small>New accounts are created as Student. Admin can assign Staff or Admin roles later.</small>
+        <button class="btn primary full" type="submit">Create account</button>
+        <p id="registerMsg" class="form-msg"></p>
+      </form>
+      <a class="back-link" href="/">← Back to public inventory</a>
+    </section>
+  </main>
+  <script src="/js/auth.js"></script>
+</body>
+</html>
