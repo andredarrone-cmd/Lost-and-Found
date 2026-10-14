@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Lost & Found Management Platform
 
 Node.js + Express + Supabase PostgreSQL + Supabase Storage web application for a school/organization lost-and-found workflow.
@@ -162,3 +163,7 @@ Claim-proof images use the private `claim-proofs` bucket. The admin API creates 
 ## User-found workflow
 
 Logged-in users can open an **Unfound** item and choose **I found this item**. They provide the location and date found. The server only allows this action when the current item status is `unfound`; `claimed` items can never be changed back to `found`.
+=======
+# Lost-and-Found
+A web-based Lost and Found Management Platform built with Node.js, Express, and Supabase. It allows users to report lost items, search found items, submit ownership claims with proof images, and track item statuses, while admins manage reports, items, and claims.
+>>>>>>> ffe42d9fb85ad8d39bf4362759f0d923b6d84779
